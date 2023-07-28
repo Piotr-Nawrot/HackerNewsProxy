@@ -24,15 +24,15 @@ public sealed class HackerNewsServiceTests
 
     public HackerNewsServiceTests()
     {
-        var settings = new Dictionary<string, string>(StringComparer.Ordinal)
+        var settings = new Dictionary<string, string?>(StringComparer.Ordinal)
         {
             ["CacheDuration"] = "60"
         };
-        
+
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(settings)
             .Build();
-        
+
         _fixture = new Fixture();
         _service = new HackerNewsService(
             _apiMock.Object,
@@ -53,7 +53,7 @@ public sealed class HackerNewsServiceTests
         var bestStoryIds = items
             .Select(i => i.Id)
             .ToList();
-        
+
         TypeAdapterConfig.GlobalSettings.Default
             .Config.NewConfig<ItemDto, Story>()
             .Map(dest => dest.PostedBy, src => src.By)
@@ -64,11 +64,11 @@ public sealed class HackerNewsServiceTests
         _apiMock
             .Setup(api => api.GetBestStoryIdsAsync())
             .ReturnsAsync(bestStoryIds);
-  
+
         _cacheMock
             .Setup(m => m.CreateEntry(It.IsAny<object>()))
             .Returns(Mock.Of<ICacheEntry>());
-        
+
         foreach(var item in items)
         {
             _apiMock.Setup(api => api.GetItemByIdAsync(item.Id)).ReturnsAsync(item);
