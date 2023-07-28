@@ -1,4 +1,5 @@
 using Api.Endpoints.V1.Stories;
+using Api.Middleware;
 using Application.Services;
 using Domain.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -57,6 +58,7 @@ if (app.Environment.IsDevelopment())
 StoriesEndpoints.AddMapping(app);
 Domain.Configurations.MappingConfig.RegisterDomainMappings();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseCors();
 app.UseRouting();
 app.UseHttpsRedirection();

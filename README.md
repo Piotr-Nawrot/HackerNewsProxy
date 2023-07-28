@@ -21,6 +21,16 @@ This project serves as a proxy for the Hacker News API. It provides an efficient
 7. I assumed that the number of requested stories should be between 1 and 500 inclusive, 500 is the maximum number of stories returned by the Hacker News API according to their documentation.
 8. Assuming that this is the creation of a new microservice, I chose minimalistic project names for namespace simplification. No library project is intended to be shared as NuGet with other systems.
 
+## Implementation
+
+1. Stories are cached for an minute to ensure efficient servicing of large numbers of requests.
+2. Included sorting of stories by score in a descending order.
+3. Exception handling middleware and logging have been implemented as a proof of concept (PoC) - this is not a production-ready implementation.
+4. Example of unit tests implemented using xUnit, Moq, FluentAssertions.
+5. Project analyzers are configured to be strict to catch as many errors and ill practices at compilation time as possible.
+6. Used modern, efficient libraries for code generation like Mapster for mapping and Refit for generating API client code.
+7. Classes are sealed to make clear that they are not to be inherited with the current design. Micro-optimization is a nice side effect, but not the purpose.
+
 ## Potential Enhancements
 
 1. Implement a mechanism to handle API unavailability or rate limiting by the Hacker News API.
@@ -39,14 +49,3 @@ This project serves as a proxy for the Hacker News API. It provides an efficient
 14. Tests implementation can further be simplified with automocking libraries. If this solution would be in a production context, additional integration and performance tests could be created.
 15. Implementation of telemetry and observability for continuous service monitoring.
 16. HealthCheck endpoints could be added for better service monitoring and maintenance.
-
-
-## Changes Made
-
-1. Stories are cached for an minute to ensure efficient servicing of large numbers of requests.
-2. Included sorting of stories by score in a descending order.
-3. Exception handling and logging have been implemented as a proof of concept (PoC) - this is not a production-ready implementation.
-4. Example of unit tests implemented using xUnit, Moq, FluentAssertions.
-5. Project analyzers are configured to be strict to catch as many errors and ill practices at compilation time as possible.
-6. Used modern, efficient libraries for code generation like Mapster for mapping and Refit for generating API client code.
-7. Classes are sealed to make clear that they are not to be inherited with the current design. Micro-optimization is a nice side effect, but not the purpose.

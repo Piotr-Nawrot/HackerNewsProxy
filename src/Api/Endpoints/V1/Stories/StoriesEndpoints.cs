@@ -17,11 +17,7 @@ public sealed class StoriesEndpoints
             LogLevel.Error,
             new EventId(2, "TopStoriesRequestOccurred"),
             "Bad request occurred with count {Count}");
-    
-    private static readonly Action<ILogger, int, Exception> LogError =
-        LoggerMessage.Define<int>(LogLevel.Error, new EventId(500, "InternalServerError"),
-            "An error occurred while processing request with count {Count}");
-    
+
     public static void AddMapping(WebApplication app)
     {
         app.MapGet($"{ApiVersion.V1}/stories", async (
@@ -37,19 +33,11 @@ public sealed class StoriesEndpoints
                                 "The 'top' parameter must be greater than 0 and less than or equal to 500."));
                     }
 
-                    try
-                    {
-                        var stories = await service.GetBestStoriesAsync(top)
-                            .ConfigureAwait(false);
-                        var response = stories.Adapt<IEnumerable<GetStoryResponse>>();
+                    var stories = await service.GetBestStoriesAsync(top)
+                        .ConfigureAwait(false);
+                    var response = stories.Adapt<IEnumerable<GetStoryResponse>>();
 
-                        return Results.Ok(response);
-                    }
-                    catch (Exception e)
-                    {
-                        LogError(logger, top, e);
-                        throw;
-                    }
+                    return Results.Ok(response);
                 }
             )
             .Produces<GetStoryResponse>()
